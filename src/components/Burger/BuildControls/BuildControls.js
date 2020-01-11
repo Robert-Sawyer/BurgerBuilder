@@ -17,7 +17,8 @@ const buildControls = (props) => (
                 label={ctrl.label}
                 added={() => props.addedIngredients(ctrl.type)}
                 removed={() => props.removedIngredients(ctrl.type)}
-                disabled={props.disabled[ctrl.type]}/>
+                disabled={props.disabled[ctrl.type]}
+                maxQuantity={props.maxQuantity[ctrl.type]}/>
         ))}
         <button
             className={classes.OrderButton}

@@ -91,11 +91,11 @@ class BurgerBuilder extends Component {
 
     purchaseHandler = () => {
         this.setState({purchasing: true});
-    }
+    };
 
     purchaseCancelHandler = () => {
         this.setState({purchasing: false});
-    }
+    };
 
     purchaseContinueHandler = () => {
         //alert("You continue!");
@@ -120,6 +120,14 @@ class BurgerBuilder extends Component {
             disabledInfo[key] = disabledInfo[key] <= 0
         }
 
+        const maxQuantityInfo = {
+            ...this.state.ingredients
+        };
+
+        for (let key in maxQuantityInfo) {
+            maxQuantityInfo[key] = maxQuantityInfo[key] >= 3
+        }
+
         let orderSummary = null;
         let burger = this.state.error ? <p>Ingredients can not be loaded </p> : <Spinner/>;
         if (this.state.ingredients) {
@@ -133,6 +141,7 @@ class BurgerBuilder extends Component {
                         addedIngredients={this.addIngredientHandler}
                         removedIngredients={this.removeInredientHandler}
                         disabled={disabledInfo}
+                        maxQuantity={maxQuantityInfo}
                         purchaseble={this.state.purchaseble}
                         ordered={this.purchaseHandler}
                         price={this.state.totalPrice}/>
