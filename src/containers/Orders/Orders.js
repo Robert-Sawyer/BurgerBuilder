@@ -9,7 +9,7 @@ class Orders extends Component {
     state = {
         orders: [],
         loading: true
-    }
+    };
 
     //pobieramy zamówienia z bazy firebase
     componentDidMount() {

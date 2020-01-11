@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-
 import Aux from '../AuxComponent/AuxComponent';
 import classes from './Layout.module.css';
 import Toolbar from '../../components/Navigation/Toolbar/Toolbar';
@@ -9,11 +8,11 @@ class Layout extends Component {
 
     state = {
         showSideDrawer: false
-    }
+    };
 
     sideDrawerClosedHandler = () => {
         this.setState({showSideDrawer: false});
-    }
+    };
 
     sideDrawerToggleHandler = () => {
         this.setState((prevState) => {
@@ -21,7 +20,7 @@ class Layout extends Component {
         });
         //W taki sposób (poprzez this.state) lepiej tego nie robić, lepszy spopsób powyżej.
         // this.setState({showSideDrawer: !this.state.showSideDrawer});
-    }
+    };
 
     render() {
         return (

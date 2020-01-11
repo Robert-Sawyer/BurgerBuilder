@@ -5,7 +5,6 @@ import Spinner from '../../../components/UI/Spinner/Spinner';
 import Input from '../../../components/UI/Input/Input';
 import axios from '../../../axios-orders';
 
-
 class ContactData extends Component {
 
     state = {
@@ -191,7 +190,7 @@ class ContactData extends Component {
         for (let inputIdentifier in updatedOrderForm) {
             formIsValid = updatedOrderForm[inputIdentifier].valid && formIsValid;
         }
-        console.log(formIsValid);
+
         //ustawiamy state na nowo, z danymi podanymi w formularzu przez użutkownika, oraz info że cały formularz jest ok
         this.setState({orderForm: updatedOrderForm, formIsValid: formIsValid});
     };

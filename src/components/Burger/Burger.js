@@ -1,5 +1,4 @@
 import React from 'react';
-
 import classes from './Burger.module.css';
 import BurgerIngredient from './BurgerIngredient/BurgerIngredient';
 
@@ -14,7 +13,7 @@ const burger = (props) => {
         }, []);
     //Powyżej tworzę tablicę składników z wewnętrznymi tablicami każdego składnika (może byc ich więcej niż jeden) a potem redukuję,
     //żeby powstała jedns tablica składników. Poniżej: jeżeli nie ma składników, wtedy wyświetl informację.
-    console.log(transformedIngredients);
+    // console.log(transformedIngredients);
 
     if (transformedIngredients.length === 0) {
         transformedIngredients = <p>Please start adding ingredients!</p>

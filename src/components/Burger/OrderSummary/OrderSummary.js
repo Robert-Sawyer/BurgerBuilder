@@ -1,5 +1,4 @@
 import React from 'react';
-
 import Aux from '../../../hoc/AuxComponent/AuxComponent';
 import Button from '../../UI/Button/Button';
 
