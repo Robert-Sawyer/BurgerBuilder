@@ -80,15 +80,14 @@ class ContactData extends Component {
             deliveryMethod: {
                 elementType: 'select',
                 elementConfig: {
-                    options: [
+                    options: [ 
+                        {value: '', displayValue:'select'},
                         {value: 'fastest', displayValue: 'Fastest'},
                         {value: 'cheapest', displayValue: 'Cheapest'}
                     ]
                 },
                 value: '',
-                validation: {
-                    required: true
-                },
+                validation: {},
                 valid: false
             }
         },
@@ -133,6 +132,12 @@ class ContactData extends Component {
 
     checkValidity(value, rules) {
         let isValid = true;
+
+        //to jeśli jakieś pole nie ma wymagalności, np deliveryMethod, wtedy mówi, że jest poprawnie
+        if (!rules) {
+            return true;
+        }
+
 
         if (rules.required) {
             //drugi warunek jest po to, żeby przy ostatnim ifie sprawdzało, czy poprzednie też zopstały spełnione,
