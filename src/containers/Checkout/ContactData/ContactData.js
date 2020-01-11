@@ -92,6 +92,7 @@ class ContactData extends Component {
                 valid: false
             }
         },
+        formIsValid: false,
         loading: false
     };
 
@@ -180,8 +181,14 @@ class ContactData extends Component {
         //zmienialiśmy tylko value
         updatedOrderForm[inputIdentifier] = updatedFormElement;
 
-        //ustawiamy state na nowo, z danymi podanymi w formularzu przez użutkownika
-        this.setState({orderForm: updatedOrderForm});
+        //ustawiamy lokalna zmienną pomocniczą do sprawdzenia poprawności WSZYSTKICH pól formularza, czyli ogólna walidacja
+        let formIsValid = true;
+        for (let inputIdentifier in updatedOrderForm) {
+            formIsValid = updatedOrderForm[inputIdentifier].valid && formIsValid;
+        }
+        console.log(formIsValid);
+        //ustawiamy state na nowo, z danymi podanymi w formularzu przez użutkownika, oraz info że cały formularz jest ok
+        this.setState({orderForm: updatedOrderForm, formIsValid: formIsValid});
     };
 
     render() {
@@ -206,7 +213,7 @@ class ContactData extends Component {
                         touched={formElement.config.touched}
                         changed={(event) => this.inputChangedHandler(event, formElement.id)}/>
                 ))}
-                <Button btnType="Success">ORDER</Button>
+                <Button btnType="Success" disabled={!this.state.formIsValid}>ORDER</Button>
             </form>
         );
         if (this.state.loading) {
