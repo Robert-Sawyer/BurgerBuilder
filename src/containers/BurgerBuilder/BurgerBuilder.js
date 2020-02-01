@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import {connect} from 'react-redux';
 import Aux from '../../hoc/AuxComponent/AuxComponent';
 import Burger from '../../components/Burger/Burger'
 import BuildControls from '../../components/Burger/BuildControls/BuildControls';
@@ -7,6 +8,7 @@ import OrderSummary from '../../components/Burger/OrderSummary/OrderSummary';
 import Spinner from '../../components/UI/Spinner/Spinner';
 import withErrorHandler from '../../hoc/withErrorHandler/withErrorHandler';
 import axios from '../../axios-orders';
+import * as actionTypes from '../../store/actions';
 
 const INGREDIENTS_PRICES = {
     salad: 0.4,
@@ -22,7 +24,6 @@ class BurgerBuilder extends Component {
     //     this.state = {...}
     // }
     state = {
-        ingredients: null,
         totalPrice: 4,
         purchaseble: false,
         purchasing: false,
@@ -31,13 +32,13 @@ class BurgerBuilder extends Component {
     };
 
     componentDidMount() {
-        axios.get('https://burger-builder-b827f.firebaseio.com/ingredients.json')
-            .then(response => {
-                this.setState({ingredients: response.data})
-            })
-            .catch(error => {
-                this.setState({error: true});
-            });
+        // axios.get('https://burger-builder-b827f.firebaseio.com/ingredients.json')
+        //     .then(response => {
+        //         this.setState({ingredients: response.data})
+        //     })
+        //     .catch(error => {
+        //         this.setState({error: true});
+        //     });
     }
 
     updatePurchaseState(ingredients) {
@@ -114,14 +115,15 @@ class BurgerBuilder extends Component {
 
     render() {
         const disabledInfo = {
-            ...this.state.ingredients
+            //zmieniamy state.ingredients na props.ingr ponieważ ZMAPOWALIŚMY STATE NA PROPS w metodzie na dole strony
+            ...this.props.ingr
         };
         for (let key in disabledInfo) {
             disabledInfo[key] = disabledInfo[key] <= 0
         }
 
         const maxQuantityInfo = {
-            ...this.state.ingredients
+            ...this.props.ingr
         };
 
         for (let key in maxQuantityInfo) {
@@ -130,16 +132,16 @@ class BurgerBuilder extends Component {
 
         let orderSummary = null;
         let burger = this.state.error ? <p>Ingredients can not be loaded </p> : <Spinner/>;
-        if (this.state.ingredients) {
+        if (this.props.ingr) {
             burger = (
                 <Aux>
                     {/*tu będzie wizualizacja Burgera*/}
-                    <Burger ingredients={this.state.ingredients}/>
+                    <Burger ingredients={this.props.ingr}/>
                     {/*//tu będzie panel zarządzający usuwaniem i dodawaniem skłądników*/
                     }
                     <BuildControls
-                        addedIngredients={this.addIngredientHandler}
-                        removedIngredients={this.removeInredientHandler}
+                        addedIngredients={this.props.onIngredientAdded}
+                        removedIngredients={this.props.onIngredientRemoved}
                         disabled={disabledInfo}
                         maxQuantity={maxQuantityInfo}
                         purchaseble={this.state.purchaseble}
@@ -148,7 +150,7 @@ class BurgerBuilder extends Component {
                 </Aux>
             );
             orderSummary = <OrderSummary
-                ingredients={this.state.ingredients}
+                ingredients={this.props.ingr}
                 price={this.state.totalPrice}
                 purchaseCancelled={this.purchaseCancelHandler}
                 purchaseContinued={this.purchaseContinueHandler}/>;
@@ -168,4 +170,19 @@ class BurgerBuilder extends Component {
     }
 }
 
-export default withErrorHandler(BurgerBuilder, axios);
+const mapStateToProps = state => {
+    return {
+        ingr: state.ingredients
+    };
+};
+
+const madDispatchToProps = dispatch => {
+    return {
+        //ingrName dostajemy przy wywołaniu tej funkcji i ustawiamy jako wartość ingredientName, któe jest potrzebne
+        //w reducerze - action.ingredientName
+        onIngredientAdded: (ingrName) => dispatch({type: actionTypes.ADD_INGREDIENT, ingredientName: ingrName}),
+        onIngredientRemoved: (ingrName) => dispatch({type: actionTypes.REMOVE_INGREDIENT, ingredientName: ingrName})
+    }
+}
+//modyfikujemy export tak, żeby dodać connect potrzebny do obsługi reduxa
+export default connect(mapStateToProps, madDispatchToProps)(withErrorHandler(BurgerBuilder, axios));
