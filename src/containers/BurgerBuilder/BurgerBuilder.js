@@ -17,7 +17,6 @@ class BurgerBuilder extends Component {
     //     this.state = {...}
     // }
     state = {
-        purchaseble: false,
         purchasing: false,
         loading: false,
         error: false
@@ -44,7 +43,9 @@ class BurgerBuilder extends Component {
             .reduce((sum, el) => {
                 return sum + el;
             }, 0);
-        this.setState({purchaseble: sum > 0});
+        //zamiast ustawiać state (dzieki redux nie musimy już tego robić) zwracamy sumę składników - jeśli coś zostanie
+        //dodane do burgera wtedy będzie mozna złożyć zamówienie. Teraz metoda przyjmuje składniki a zwraca booleana
+        return sum > 0;
     }
 
     // addIngredientHandler = (type) => {
@@ -136,7 +137,7 @@ class BurgerBuilder extends Component {
                         removedIngredients={this.props.onIngredientRemoved}
                         disabled={disabledInfo}
                         maxQuantity={maxQuantityInfo}
-                        purchaseble={this.state.purchaseble}
+                        purchaseble={this.updatePurchaseState(this.props.ingr)}
                         ordered={this.purchaseHandler}
                         price={this.props.price}/>
                 </Aux>
