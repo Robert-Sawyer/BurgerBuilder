@@ -8,7 +8,7 @@ import OrderSummary from '../../components/Burger/OrderSummary/OrderSummary';
 import Spinner from '../../components/UI/Spinner/Spinner';
 import withErrorHandler from '../../hoc/withErrorHandler/withErrorHandler';
 import axios from '../../axios-orders';
-import * as actionTypes from '../../store/actions/actionTypes';
+import * as burgerBuilderActions from '../../store/actions/index';
 
 class BurgerBuilder extends Component {
     //ALTERNATYWA DLA STATE:
@@ -174,8 +174,8 @@ const madDispatchToProps = dispatch => {
     return {
         //ingrName dostajemy przy wywołaniu tej funkcji i ustawiamy jako wartość ingredientName, któe jest potrzebne
         //w reducerze - action.ingredientName
-        onIngredientAdded: (ingrName) => dispatch({type: actionTypes.ADD_INGREDIENT, ingredientName: ingrName}),
-        onIngredientRemoved: (ingrName) => dispatch({type: actionTypes.REMOVE_INGREDIENT, ingredientName: ingrName})
+        onIngredientAdded: (ingrName) => dispatch(burgerBuilderActions.addIngredient(ingrName)),
+        onIngredientRemoved: (ingrName) => dispatch(burgerBuilderActions.removeIngredient(ingrName))
     }
 }
 //modyfikujemy export tak, żeby dodać connect potrzebny do obsługi reduxa
