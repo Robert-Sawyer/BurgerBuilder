@@ -1,13 +1,10 @@
 import * as actionTypes from '../actions/actionTypes';
 
 const initialState = {
-    ingredients: {
-        bacon: 0,
-        salad: 0,
-        cheese: 0,
-        meat: 0
-    },
-    totalPrice: 4
+//zmieniamy na null bo znowu będziemy używać axiosa
+    ingredients: null,
+    totalPrice: 4,
+    error: false
 };
 
 const INGREDIENTS_PRICES = {
