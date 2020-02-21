@@ -24,6 +24,7 @@ class BurgerBuilder extends Component {
 
     componentDidMount() {
         console.log(this.props);
+        this.props.onInitIngredients();
     }
 
     updatePurchaseState(ingredients) {
@@ -118,7 +119,7 @@ class BurgerBuilder extends Component {
         }
 
         let orderSummary = null;
-        let burger = this.state.error ? <p>Ingredients can not be loaded </p> : <Spinner/>;
+        let burger = this.props.error ? <p>Ingredients can not be loaded </p> : <Spinner/>;
         if (this.props.ingr) {
             burger = (
                 <Aux>
@@ -160,7 +161,8 @@ class BurgerBuilder extends Component {
 const mapStateToProps = state => {
     return {
         ingr: state.ingredients,
-        price: state.totalPrice
+        price: state.totalPrice,
+        error: state.error
     };
 };
 
@@ -169,7 +171,8 @@ const madDispatchToProps = dispatch => {
         //ingrName dostajemy przy wywołaniu tej funkcji i ustawiamy jako wartość ingredientName, któe jest potrzebne
         //w reducerze - action.ingredientName
         onIngredientAdded: (ingrName) => dispatch(burgerBuilderActions.addIngredient(ingrName)),
-        onIngredientRemoved: (ingrName) => dispatch(burgerBuilderActions.removeIngredient(ingrName))
+        onIngredientRemoved: (ingrName) => dispatch(burgerBuilderActions.removeIngredient(ingrName)),
+        onInitIngredients: () => dispatch(burgerBuilderActions.initIngredients())
     }
 }
 //modyfikujemy export tak, żeby dodać connect potrzebny do obsługi reduxa
