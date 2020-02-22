@@ -16,11 +16,18 @@ export const purchaseBurgerFail = (error) => {
     };
 };
 
+export const purchaseBurgerStart = () => {
+    return {
+        type: actionTypes.PURCHASE_BURGER_START
+    };
+};
+
 //powyższe actionCreaters są zsynchronizowane, poniżej asynchroniczne
 
 //ten actionCreater jest potrzebny w momencie kliknięcia w przycisk ORDER. Robię dispatcha i korzystam z redux-thunk middleware
-export const purchaseBurgerStart = (orderData) => {
+export const purchaseBurger = (orderData) => {
     return dispatch => {
+        dispatch(purchaseBurgerStart());
         axios.post('orders.json', orderData)
             .then(response => {
                 console.log(response.data);
