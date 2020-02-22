@@ -113,20 +113,6 @@ class ContactData extends Component {
             price: this.props.price,
             customerData: formData
         };
-        axios.post('orders.json', order)
-            .then(response => {
-                this.setState({
-                    loading: false
-                });
-                //dzieki temu po złożeniu zamówienia przekieruje nas z powrotem do głównej
-                //strony (reszta w checkout - props w Route -> render)
-                this.props.history.push('/');
-            })
-            .catch(error => {
-                this.setState({
-                    loading: false
-                })
-            });
         console.log(this.props.ingredients);
     };
 

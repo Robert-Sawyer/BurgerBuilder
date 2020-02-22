@@ -41,6 +41,12 @@ const reducer = (state = initialState, action) => {
             return {
                 ...state,
                 ingredients: action.ingr,
+//      ŻEBY RĘCZNIE ZMIENIĆ KOLEJNOŚĆ WYŚWIETLANYCH SKŁADNIKÓW MOŻNA TO ZROBIĆ TAK: (ALBO ZMIENIĆ KOLEJNOŚĆ W FIREBASE)
+//                ingredients: {
+//                salad: action.ingr.salad,
+//                meat: action.ingr.meat
+//                itp
+//                }
                 error: false
             };
          case actionTypes.FETCH_INGREDIENTS_FAILED:
