@@ -1,4 +1,4 @@
-import * as actionTypes from '../action/actionTypes';
+import * as actionTypes from '../actions/actionTypes';
 
 const initialState = {
     orders: [],
@@ -21,7 +21,7 @@ const reducer = (state = initialState, action) => {
                 ...state,
                 loading: false,
                 //concat tworzy nową tablicę - odcinek 339
-                orders: state.orders.concat(newOrder);
+                orders: state.orders.concat(newOrder)
             };
         case actionTypes.PURCHASE_BURGER_FAIL:
             return {
@@ -32,3 +32,5 @@ const reducer = (state = initialState, action) => {
             return state;
     }
 }
+
+export default reducer;
