@@ -20,8 +20,12 @@ class Checkout extends Component {
     //nastąpi przekierowanie z powrotem na stronę główną i wyzerowanie ingrediencji
         let summary = <Redirect to='/'/>
         if (this.props.ingr) {
+            //po złożeniu zamówienia przekieruje na główna stronę, bo purchased jest zmienione na true w momencie7
+            //w którym zostaje złożone poprawne zamówienie (patrz reducers/order)
+            const purchasedRedirect = this.props.purchased ? <Redirect to="/" /> : null;
             summary = (
                 <div>
+                    {purchasedRedirect}
                     <CheckoutSummary
                       ingredients={this.props.ingr}
                       checkoutCancelled={this.checkoutCancelledHandler}
@@ -39,7 +43,8 @@ class Checkout extends Component {
 
 const mapStateToProps = state => {
     return {
-        ingr: state.burgerBuilder.ingredients
+        ingr: state.burgerBuilder.ingredients,
+        purchased: state.order.purchased
     }
 };
 

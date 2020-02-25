@@ -7,7 +7,7 @@ import Modal from '../../components/UI/Modal/Modal';
 import OrderSummary from '../../components/Burger/OrderSummary/OrderSummary';
 import Spinner from '../../components/UI/Spinner/Spinner';
 import withErrorHandler from '../../hoc/withErrorHandler/withErrorHandler';
-import * as burgerBuilderActions from '../../store/actions/index';
+import * as actions from '../../store/actions/index';
 import axios from '../../axios-orders';
 
 
@@ -89,15 +89,19 @@ class BurgerBuilder extends Component {
     purchaseContinueHandler = () => {
         //alert("You continue!");
 
-        const queryParams = [];
-        for (let i in this.state.ingredients) {
-            queryParams.push(encodeURIComponent(i) + "=" + encodeURIComponent(this.state.ingredients[i]));
-        }
-        queryParams.push('price=' + this.state.totalPrice);
-        const queryString = queryParams.join("&");
+//        const queryParams = [];
+//        for (let i in this.state.ingredients) {
+//            queryParams.push(encodeURIComponent(i) + "=" + encodeURIComponent(this.state.ingredients[i]));
+//        }
+//        queryParams.push('price=' + this.state.totalPrice);
+//        const queryString = queryParams.join("&");
+
+//initPurchase dajemy tutaj a nie w checkoucie ponieważ wtedy nie dało by się złożyć ponownego zamówienia a
+//przekierowywało by z powrotem po dodaniu składników
+        this.props.onInitPuchase();
         this.props.history.push({
-            pathname: "/checkout",
-            search: "?" + queryString
+            pathname: "/checkout"
+//            search: "?" + queryString
         });
     };
 
@@ -170,9 +174,10 @@ const madDispatchToProps = dispatch => {
     return {
         //ingrName dostajemy przy wywołaniu tej funkcji i ustawiamy jako wartość ingredientName, któe jest potrzebne
         //w reducerze - action.ingredientName
-        onIngredientAdded: (ingrName) => dispatch(burgerBuilderActions.addIngredient(ingrName)),
-        onIngredientRemoved: (ingrName) => dispatch(burgerBuilderActions.removeIngredient(ingrName)),
-        onInitIngredients: () => dispatch(burgerBuilderActions.initIngredients())
+        onIngredientAdded: (ingrName) => dispatch(actions.addIngredient(ingrName)),
+        onIngredientRemoved: (ingrName) => dispatch(actions.removeIngredient(ingrName)),
+        onInitIngredients: () => dispatch(actions.initIngredients()),
+        onInitPuchase: () => dispatch(actions.purchaseInit())
     }
 }
 //modyfikujemy export tak, żeby dodać connect potrzebny do obsługi reduxa
