@@ -37,6 +37,7 @@ const reducer = (state = initialState, action) => {
                 },
                 totalPrice: state.totalPrice - INGREDIENTS_PRICES[action.ingredientName]
             };
+            //Ten case jest realizowany w momencie załadowania od nowa strony głównej a konkretnie belki ze składnikami
         case actionTypes.SET_INGREDIENTS:
             return {
                 ...state,
@@ -47,6 +48,7 @@ const reducer = (state = initialState, action) => {
 //                meat: action.ingr.meat
 //                itp
 //                }
+                totalPrice: 4,
                 error: false
             };
          case actionTypes.FETCH_INGREDIENTS_FAILED:
