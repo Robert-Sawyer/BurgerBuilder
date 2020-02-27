@@ -45,28 +45,31 @@ export const purchaseInit = () => {
     };
 };
 
-export const fetchOrderSuccess = (orders) => {
+export const fetchOrdersSuccess = (orders) => {
     return {
-        type: actionTypes.FETCH_ORDER_SUCCESS,
+        type: actionTypes.FETCH_ORDERS_SUCCESS,
         orders: orders
     };
 };
 
-export const fetchOrderFail = (error) => {
+export const fetchOrdersFail = (error) => {
     return {
-        type: actionTypes.FETCH_ORDER_FAIL,
+        type: actionTypes.FETCH_ORDERS_FAIL,
         error: error
     };
 };
 
-export const fetchOrderStart = () => {
+export const fetchOrdersStart = () => {
     return {
-        type: actionTypes.FETCH_ORDER_START
+        type: actionTypes.FETCH_ORDERS_START
     };
 };
 
-export const fetchOrder = () => {
+export const fetchOrders = () => {
     return dispatch => {
+    //dzięki temu dispatchowi w momencie ładowania zamówień na chwilę wyświetli się Spinner, ponieważ w reducerze
+    //ustawiliśmy loading na true gdy uruchomi się ten actionTypes
+        dispatch(fetchOrdersStart());
         axios.get('orders.json')
             .then(res => {
                 const fetchedOrders = [];
@@ -76,10 +79,10 @@ export const fetchOrder = () => {
                         id: key
                     });
                 }
-                dispatch(fetchOrderSuccess(fetchedOrders));
+                dispatch(fetchOrdersSuccess(fetchedOrders));
             })
             .catch(err => {
-                dispatch(fetchOrderFail(err));
+                dispatch(fetchOrdersFail(err));
             });
     };
 };
