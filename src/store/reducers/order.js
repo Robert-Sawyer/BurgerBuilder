@@ -10,9 +10,9 @@ const initialState = {
 const reducer = (state = initialState, action) => {
     switch (action.type) {
         case actionTypes.PURCHASE_INIT:
-            return updateObject(state, {purchased: true});
+            return updateObject(state, {purchased: false});
         case actionTypes.PURCHASE_BURGER_START:
-            return updateObject(state, [loading: true]);
+            return updateObject(state, {loading: false});
         case actionTypes.PURCHASE_BURGER_SUCCESS:
             const newOrder = updateObject(action.orderData, {id:action.orderId});
             return updateObject(state, {
@@ -31,7 +31,7 @@ const reducer = (state = initialState, action) => {
             return updateObject(state, {loading: false});
         default:
             return state;
-    };
+    }
 };
 
 export default reducer;

@@ -8,6 +8,7 @@ const controls = [
     {label: 'Meat', type: 'meat'},
     {label: 'Salad', type: 'salad'}
 ];
+
 const buildControls = (props) => (
     <div className={classes.BuildControls}>
         <p>Current Price: <strong>{props.price.toFixed(2)}</strong></p>
