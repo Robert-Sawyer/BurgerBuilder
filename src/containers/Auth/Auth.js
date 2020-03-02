@@ -1,7 +1,9 @@
 import React, {Component} from 'react';
+import {connect} from 'react-redux';
 import Input from '../../components/UI/Input/Input';
 import Button from '../../components/UI/Button/Button';
 import classes from './Auth.module.css';
+import * as actions from '../../store/actions/index'
 
 class Auth extends Component {
 
@@ -77,6 +79,12 @@ class Auth extends Component {
          this.setState({authForm: updatedForm});
     }
 
+    submitHandler = (event) => {
+        //to zapobiega przeładowywaniu sie strony
+        event.preventDefault();
+        this.props.onAuth(this.state.authForm.email.value, this.state.authForm.password.value);
+    }
+
     render () {
         const formElementsArray = [];
         for (let key in this.state.authForm) {
@@ -101,12 +109,21 @@ class Auth extends Component {
         ));
 
         return (
+        // onAuth ma się uruchamiać po każdym wysłaniu formularza (onSubmitHandler)
             <div className={classes.Auth}>
-                {form}
-                <Button btnType="Success">SUBMIT</Button>
+                <form onSubmit={this.submitHandler}>
+                    {form}
+                    <Button btnType="Success">SUBMIT</Button>
+                </form>
             </div>
         );
     };
 };
 
-export default Auth;
+const mapDispatchToProps = dispatch => {
+    return {
+        onAuth: (email, password) => dispatch(actions.auth(email, password))
+    };
+};
+
+export default connect(null, mapDispatchToProps)(Auth);
