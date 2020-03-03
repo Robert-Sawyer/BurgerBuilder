@@ -25,10 +25,10 @@ export const purchaseBurgerStart = () => {
 //powyższe actionCreaters są zsynchronizowane, poniżej asynchroniczne
 
 //ten actionCreater jest potrzebny w momencie kliknięcia w przycisk ORDER. Robię dispatcha i korzystam z redux-thunk middleware
-export const purchaseBurger = (orderData) => {
+export const purchaseBurger = (orderData, token) => {
     return dispatch => {
         dispatch(purchaseBurgerStart());
-        axios.post('orders.json', orderData)
+        axios.post('orders.json?auth=' + token, orderData)
             .then(response => {
                 console.log(response.data);
                 dispatch(purchaseBurgerSuccess(response.data.name, orderData));
@@ -65,12 +65,14 @@ export const fetchOrdersStart = () => {
     };
 };
 
-export const fetchOrders = () => {
+export const fetchOrders = (token) => {
     return dispatch => {
     //dzięki temu dispatchowi w momencie ładowania zamówień na chwilę wyświetli się Spinner, ponieważ w reducerze
     //ustawiliśmy loading na true gdy uruchomi się ten actionTypes
         dispatch(fetchOrdersStart());
-        axios.get('orders.json')
+        //końcówka linku to autoryzacja usera, bo zabroniliśmy niezalogowanemu przeglądac zamówień, więc trzeba pobrać
+        //token zalogowanego usera - dzieje się to w orders container gdzie pobieram token ze state auth reducera
+        axios.get('orders.json?auth=' + token)
             .then(res => {
                 const fetchedOrders = [];
                 for (let key in res.data) {
