@@ -4,7 +4,8 @@ import {updateObject} from '../utility';
 const initialState = {
     ingredients: null,
     totalPrice: 4,
-    error: false
+    error: false,
+    building: false //to jest po to gdy niezalogowany zamawia burgera i w połowie się loguje - żeby nie stracić składników
 };
 
 const INGREDIENTS_PRICES = {
@@ -21,7 +22,8 @@ const addIngredient = (state, action) => {
     const updatedIngredientsAdd = updateObject(state.ingredients, updatedIngredientAdd);
     const updatedStateAdd = {
         ingredients: updatedIngredientsAdd,
-        totalPrice: state.totalPrice + INGREDIENTS_PRICES[action.ingredientName]
+        totalPrice: state.totalPrice + INGREDIENTS_PRICES[action.ingredientName],
+        building: true
     };
     return updateObject(state, updatedStateAdd);
 };
@@ -31,7 +33,8 @@ const removeIngredient = (state, action) => {
     const updatedIngredientsRem = updateObject(state.ingredients, updatedIngredientRem);
     const updatedStateRem = {
         ingredients: updatedIngredientsRem,
-        totalPrice: state.totalPrice - INGREDIENTS_PRICES[action.ingredientName]
+        totalPrice: state.totalPrice - INGREDIENTS_PRICES[action.ingredientName],
+        building: true
     };
     return updateObject(state, updatedStateRem);
 };
@@ -45,7 +48,8 @@ const setIngredients = (state, action) => {
             //  meat: action.ingr.meat
             //  itp }
         totalPrice: 4,
-        error: false
+        error: false,
+        building: false
     });
 };
 

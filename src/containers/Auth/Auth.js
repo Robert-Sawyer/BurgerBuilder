@@ -43,6 +43,16 @@ class Auth extends Component {
         isSignUp: true
     }
 
+    componentDidMount () {
+    //robimy dispatcha dla ustawienia śćieżki przekierowania również gdy user nie zbudował burgera
+    //wykorzystuję do tego parametr building ze state w reducers/burgerBuilder
+        if (!this.props.buildingBurger && this.props.authRedirectPath !== "/") {
+            this.props.onSetAuthRedirectPath();
+            //oto co się dzieje: jeśli user nie zbudował burgera I jeśli ścieżka przekierowania nie kieruje na główną,
+            //wtedy wywołaj metodę z dispatcha bo tam jest na sztywno '/'. robię tu resetowanie ścieżki na domyślną
+        }
+    }
+
     checkValidity(value, rules) {
         let isValid = true;
 
@@ -134,7 +144,9 @@ class Auth extends Component {
 
         let authRedirect = null;
         if (this.props.isAuthenticated) {
-            authRedirect = <Redirect to="/"/>
+        //uzależniam ścieżkę od tego, jaka jest aktualnie ustawiona w state w reducerze a to zależy
+        //od wartości parametru buildingBurger
+            authRedirect = <Redirect to={this.props.authRedirectPath}/>
         }
 
         return (
@@ -159,13 +171,17 @@ const mapStateToProps = state => {
     //state.auth a dokładniejsamo auth bierze się z index.js gdzie mam zdefiniowane reducery po konkretnymi nazwami
         loading: state.auth.loading,
         error: state.auth.error,
-        isAuthenticated: state.auth.token !== null
+        isAuthenticated: state.auth.token !== null,
+        buildingBurger: state.burgerBuilder.building,
+        authRedirectPath: state.auth.authRedirectPath
     };
 };
 
 const mapDispatchToProps = dispatch => {
     return {
-        onAuth: (email, password, isSignUp) => dispatch(actions.auth(email, password, isSignUp))
+        onAuth: (email, password, isSignUp) => dispatch(actions.auth(email, password, isSignUp)),
+        //w tym przypadku ustawiamy na sztywno ścieżkę, bo poprzez Auth container zawsze chcemy przekirować na główną
+        onSetAuthRedirectPath: () => dispatch(actions.setAuthRedirectPath("/"))
     };
 };
 

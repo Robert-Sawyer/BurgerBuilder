@@ -35,10 +35,12 @@ class BurgerBuilder extends Component {
     }
 
     purchaseHandler = () => {
-        if (this.state.isAuth) {
+        if (this.props.isAuthenticated) {
             this.setState({purchasing: true});
         } else {
-            this.props.history.push('/auth');
+        //przekierowanie do checkout gdy zaloguje się po uprzednim stworzeniu burgera
+            this.props.onSetAuthRedirectPath("/checkout");
+            this.props.history.push("/auth");
         }
     };
 
@@ -124,7 +126,8 @@ const madDispatchToProps = dispatch => {
         onIngredientAdded: (ingrName) => dispatch(actions.addIngredient(ingrName)),
         onIngredientRemoved: (ingrName) => dispatch(actions.removeIngredient(ingrName)),
         onInitIngredients: () => dispatch(actions.initIngredients()),
-        onInitPuchase: () => dispatch(actions.purchaseInit())
+        onInitPuchase: () => dispatch(actions.purchaseInit()),
+        onSetAuthRedirectPath: (path) => dispatch(actions.setAuthRedirectPath(path))
     }
 }
 //modyfikujemy export tak, żeby dodać connect potrzebny do obsługi reduxa
