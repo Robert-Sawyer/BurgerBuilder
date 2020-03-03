@@ -22,6 +22,21 @@ export const authFail = (error) => {
     };
 };
 
+export const logout = () => {
+    return {
+        type: actionTypes.AUTH_LOGOUT
+    };
+};
+
+export const checkAuthTimeout = (expirationTime) => {
+    return dispatch => {
+        setTimeout(() => {
+      //ten dispatch obsługujący wylogowanie uruchowmi się PO CZASIE EXPIRATION TIME, CZYLI PO CZASIE WYGAŚNIĘCIA SESJI
+            dispatch(logout());
+        }, expirationTime * 1000); //mnożymy razy 100 bo czas przychodzący z response jest w sekundach a settimeout w ms
+    };
+};
+
 //dodajemy dodatkowy parametr - czy jest zarejestrowany czy nie
 export const auth = (email, password, isSignUp) => {
     return dispatch => {
@@ -53,6 +68,7 @@ export const auth = (email, password, isSignUp) => {
                 //TERAZ: po zalogowaniu i wejściu w narzędziech developerskich w redux i state widać, że w state.auth
                 //mamy dane z burgerbuildera, orders i auth i tutaj mamy dostarczony token i userid z obiektu response
                 dispatch(authSuccess(response.data.idToken, response.data.localId));
+                dispatch(checkAuthTimeout(response.data.expiresIn));
             })
             .catch(err => {
                 dispatch(authFail(err.response.data.error));
