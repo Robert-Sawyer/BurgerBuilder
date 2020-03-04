@@ -11,7 +11,9 @@ import burgerBuilderReducer from './store/reducers/burgerBuilder';
 import orderReducer from './store/reducers/order';
 import authReducer from './store/reducers/auth';
 
-const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+//dzięki process.env ... ustawiam, że po deployu eplikacji tylkoja będe widział podgląd reduxa w narzędziach developwerskich
+//NODE_ENV znalazłem w folderze config w pliku env,js gdzie znajdują się zmienne środowiskowe
+const composeEnhancers = process.env.NODE_ENV === 'development' ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ : null || compose;
 
 const rootReducer = combineReducers({
     burgerBuilder: burgerBuilderReducer,
