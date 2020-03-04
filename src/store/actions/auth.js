@@ -23,6 +23,9 @@ export const authFail = (error) => {
 };
 
 export const logout = () => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('expirationDate');
+    localStorage.removeItem('userId');
     return {
         type: actionTypes.AUTH_LOGOUT
     };
@@ -63,6 +66,14 @@ export const auth = (email, password, isSignUp) => {
         axios.post(url, authData)
             .then(response => {
                 console.log(response);
+                //localStorage jest mi potrzebne w uproszczeniu do stworzenia API w przeglądarce, żeby docelowo
+                //trzymać usera zalogowanego nawet po przeładowaniu strony. 'token'to key a response wartość
+                localStorage.setItem('token', response.data.idToken);
+                //poza tokenem musze też wiedzieć kiedy wygaśnie autoryzacja:
+                const expirationDate = new Date(new Date().getTime() + response.data.expiresIn * 1000);
+                localStorage.setItem('expirationDate', expirationDate);
+                //potrzebuję też id usera, które zawiera się w localId
+                localStorage.setItem('userId', response.data.localId);
                 //idToken i localId - to nazwy parametrów, które znalazłem w narzędziach developerskich po zalogowaniu
                 //w aplikacji na localhoście. ten drugi to po prostu userid
                 //TERAZ: po zalogowaniu i wejściu w narzędziech developerskich w redux i state widać, że w state.auth
@@ -73,7 +84,6 @@ export const auth = (email, password, isSignUp) => {
             .catch(err => {
                 dispatch(authFail(err.response.data.error));
             })
-
     };
 };
 
@@ -81,5 +91,26 @@ export const setAuthRedirectPath = (path) => {
     return {
         type: actionTypes.SET_AUTH_REDIRECT_PATH,
         path: path
+    };
+};
+
+export const authCheckState = () => {
+    return dispatch => {
+        const token = localStorage.getItem('token');
+        if (!token) {
+            dispatch(logout());
+        } else {
+        //owijam to w new Date, żeby przekonwertować dostarczonego Stringa na typ Date
+            const expirationDate = new Date(localStorage.getItem('expirationDate'));
+            if (expirationDate <= new Date()) {
+               dispatch(logout());
+            } else {
+               const userId = localStorage.getItem('userId');
+               dispatch(authSuccess(token, userId));
+               //metoda checkAuthTimeout musi dostać liczbę milisekund wygaśnięcia sesji, więc trzeba to obliczyć w taki sposób:
+               dispatch(checkAuthTimeout((expirationDate.getTime() - new Date().getTime()) / 1000));
+               //dzielimy przez tysiąć ponieważ w metodzie checkAuthTimeout mamy setTimeout i tam mnożymy * 1000 żeby wyrównać jednostki
+            }
+        }
     };
 };
