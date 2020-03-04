@@ -15,6 +15,8 @@ class App extends Component {
     this.props.onTryAutoSignup();
   }
 
+//JAKO DODATKOWE ULEPSZENIE MOŻNA DODAĆ JESZCZE LENIWE ŁADOWANIE IMPORTÓW POPRZEZ ASYNCCOMPONENT - PRZYKŁAD W REACT-START-APP
+
   render() {
     let routes = (
         <Switch>

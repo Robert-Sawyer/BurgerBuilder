@@ -65,7 +65,6 @@ export const auth = (email, password, isSignUp) => {
 
         axios.post(url, authData)
             .then(response => {
-                console.log(response);
                 //localStorage jest mi potrzebne w uproszczeniu do stworzenia API w przeglądarce, żeby docelowo
                 //trzymać usera zalogowanego nawet po przeładowaniu strony. 'token'to key a response wartość
                 localStorage.setItem('token', response.data.idToken);
