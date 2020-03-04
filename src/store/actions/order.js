@@ -65,14 +65,15 @@ export const fetchOrdersStart = () => {
     };
 };
 
-export const fetchOrders = (token) => {
+export const fetchOrders = (token, userId) => {
     return dispatch => {
     //dzięki temu dispatchowi w momencie ładowania zamówień na chwilę wyświetli się Spinner, ponieważ w reducerze
     //ustawiliśmy loading na true gdy uruchomi się ten actionTypes
         dispatch(fetchOrdersStart());
+        const queryParams = '?auth=' + token + '&orderBy="userId"&equalTo="' + userId + '"';
         //końcówka linku to autoryzacja usera, bo zabroniliśmy niezalogowanemu przeglądac zamówień, więc trzeba pobrać
         //token zalogowanego usera - dzieje się to w orders container gdzie pobieram token ze state auth reducera
-        axios.get('orders.json?auth=' + token)
+        axios.get('orders.json' + queryParams)
             .then(res => {
                 const fetchedOrders = [];
                 for (let key in res.data) {

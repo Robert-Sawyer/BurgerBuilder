@@ -10,7 +10,7 @@ class Orders extends Component {
 
     //pobieramy zamówienia z bazy firebase poprzez axiosa któy jest teraz w actionCreater w action/order
     componentDidMount() {
-        this.props.onFetchOrders(this.props.token);
+        this.props.onFetchOrders(this.props.token, this.props.userId);
     }
 
     render() {
@@ -40,13 +40,14 @@ const mapStateToProps = state => {
         orders: state.order.orders,
         loading: state.order.loading,
         //dodaję token bo potrzebuję go do pokazania zamówień TYLKO dla zalogowanego, więc pobieram go z auth reducera
-        token: state.auth.token
+        token: state.auth.token,
+        userId: state.auth.userId
     };
 };
 
 const mapDispatchToProps = dispatch => {
     return {
-        onFetchOrders: (token) => dispatch(actions.fetchOrders(token))
+        onFetchOrders: (token, userId) => dispatch(actions.fetchOrders(token, userId))
     };
 };
 
