@@ -33,7 +33,7 @@ class Checkout extends Component {
                     <Route
                         path={this.props.match.path + '/contact-data'}
                         //dzięki redux możemy zastąpić render property tą poniżej i teraz nie potrzebujemy mapować ceny price
-                        component={ContactData}/>)}/>
+                        component={ContactData}/>
                 </div>
              );
         }
