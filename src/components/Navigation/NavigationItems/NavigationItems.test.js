@@ -1,9 +1,9 @@
 import React from 'react';
 
-import (configure, shallow) from 'enzyme';
+import {configure, shallow} from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
 import NavigationItems from './NavigationItems';
-import NavigationItem from '.NavigationItem/NavigationItem';
+import NavigationItem from './NavigationItem/NavigationItem';
 
 //istotą enzme jest to, że żeby wytestować jeden komponent, jak navigationitems bez renderowania całej aplikacji możemy
 //wyrenderować pojedynczy komponent w izolacji od reszty aplikacji
