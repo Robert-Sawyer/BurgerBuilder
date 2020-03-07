@@ -9,6 +9,7 @@ const navigationItems = (props) => (
         {!props.isAuthenticated
         ? <NavigationItem link="/auth">Authenticate</NavigationItem>
         : <NavigationItem link="/logout">Logout</NavigationItem>}
+        <NavigationItem>PL ENG</NavigationItem>
     </ul>
 );
 //do powyższego: jeśli z props, czyli z SideDrawer i Toolbar a tam z Layout, a tam z auth.state przyjdzie informacja
