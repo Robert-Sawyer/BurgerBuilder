@@ -16,7 +16,7 @@ class ContactData extends Component {
                 elementType: 'input',
                 elementConfig: {
                     type: 'text',
-                    placeholder: 'Your Name'
+                    placeholder: 'Imię'
                 },
                 value: '',
                 validation: {
@@ -29,7 +29,7 @@ class ContactData extends Component {
                 elementType: 'input',
                 elementConfig: {
                     type: 'email',
-                    placeholder: 'Your Mail'
+                    placeholder: 'Adres E-Mail'
                 },
                 value: '',
                 validation: {
@@ -42,7 +42,7 @@ class ContactData extends Component {
                 elementType: 'input',
                 elementConfig: {
                     type: 'text',
-                    placeholder: 'Street'
+                    placeholder: 'Ulica'
                 },
                 value: '',
                 validation: {
@@ -55,7 +55,7 @@ class ContactData extends Component {
                 elementType: 'input',
                 elementConfig: {
                     type: 'text',
-                    placeholder: 'Zip Code'
+                    placeholder: 'Kod pocztowy'
                 },
                 value: '',
                 validation: {
@@ -70,7 +70,7 @@ class ContactData extends Component {
                 elementType: 'input',
                 elementConfig: {
                     type: 'text',
-                    placeholder: 'City'
+                    placeholder: 'Miasto'
                 },
                 value: '',
                 validation: {
@@ -83,9 +83,9 @@ class ContactData extends Component {
                 elementType: 'select',
                 elementConfig: {
                     options: [
-                        {value: '', displayValue:'select'},
-                        {value: 'fastest', displayValue: 'Fastest'},
-                        {value: 'cheapest', displayValue: 'Cheapest'}
+                        {value: '', displayValue:'wybierz metodę dostawy'},
+                        {value: 'fastest', displayValue: 'Najszybsza'},
+                        {value: 'cheapest', displayValue: 'Najtańsza'}
                     ]
                 },
                 value: '',
@@ -215,7 +215,7 @@ class ContactData extends Component {
         }
         return (
             <div className={classes.ContactData}>
-                <h4>Enter your contact data:</h4>
+                <h4>Wprowadź swoje dane kontaktowe:</h4>
                 {form}
             </div>
         );

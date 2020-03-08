@@ -27,9 +27,9 @@ const order = (props) => {
 
     return (
         <div className={classes.Order}>
-            <p>Ingredients: {ingredientOutput}</p>
+            <p>Składniki: {ingredientOutput}</p>
             {/*parseFloat jest po to, żeby zaokrąglić cenę do dwóch miejsc po przecinku*/}
-            <p>Price: <strong>{Number.parseFloat(props.price).toFixed(2)} USD</strong></p>
+            <p>Cena: <strong>{Number.parseFloat(props.price).toFixed(2)} PLN</strong></p>
         </div>
     )
 };

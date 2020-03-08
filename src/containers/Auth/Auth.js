@@ -15,7 +15,7 @@ class Auth extends Component {
                 elementType: 'input',
                 elementConfig: {
                     type: 'email',
-                    placeholder: 'Your Mail'
+                    placeholder: 'Wpisz adres E-Mail'
                 },
                 value: '',
                 validation: {
@@ -29,7 +29,7 @@ class Auth extends Component {
                 elementType: 'input',
                 elementConfig: {
                     type: 'password',
-                    placeholder: 'Your Password'
+                    placeholder: 'Wpisz hasło'
                 },
                 value: '',
                 validation: {
@@ -156,11 +156,11 @@ class Auth extends Component {
                 {errorMessage}
                 <form onSubmit={this.submitHandler}>
                     {form}
-                    <Button btnType="Success">SUBMIT</Button>
+                    <Button btnType="Success">ZATWIERDŹ</Button>
                 </form>
                 <Button
                     clicked={this.switchAuthModeHandler}
-                    btnType='Danger'>SWITCH TO {this.state.isSignUp ? 'SIGN IN' : 'SIGN UP'}</Button>
+                    btnType='Danger'>PRZEŁĄCZ NA {this.state.isSignUp ? 'LOGOWANIE' : 'REJESTRACJĘ'}</Button>
             </div>
         );
     };

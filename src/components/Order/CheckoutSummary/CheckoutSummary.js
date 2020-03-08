@@ -7,7 +7,7 @@ const checkoutSummary = (props) => {
 
     return (
         <div className={classes.CheckoutSummary}>
-            <h1>Enjoy your burger. I hope it will taste well!</h1>
+            <h1>Oto Twój Burger! Życzymy smacznego!</h1>
             <div style={{width: '100%', margin: 'auto'}}>
                 {/*props.ingredents bierze się z componentu Burger gdzie ustawiamy Object.keys jako ingredients*/}
                 <Burger ingredients={props.ingredients}/>
@@ -15,10 +15,10 @@ const checkoutSummary = (props) => {
             {/*btnType i clicked bierze się z komponentu Button*/}
             <Button
                 btnType="Danger"
-                clicked={props.checkoutCancelled}>CANCEL</Button>
+                clicked={props.checkoutCancelled}>ANULUJ</Button>
             <Button
                 btnType="Success"
-                clicked={props.checkoutContinued}>CONTINUE</Button>
+                clicked={props.checkoutContinued}>KONTYNUUJ</Button>
         </div>
     );
 };

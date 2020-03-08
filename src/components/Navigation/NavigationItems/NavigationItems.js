@@ -4,12 +4,11 @@ import NavigationItem from './NavigationItem/NavigationItem';
 
 const navigationItems = (props) => (
     <ul className={classes.NavigationItems}>
-        <NavigationItem link="/" exact>Burger Builder</NavigationItem>
-        {props.isAuthenticated ? <NavigationItem link="/orders">Orders</NavigationItem> : null}
+        <NavigationItem link="/" exact>Stwórz burgera</NavigationItem>
+        {props.isAuthenticated ? <NavigationItem link="/orders">Zamówienia</NavigationItem> : null}
         {!props.isAuthenticated
-        ? <NavigationItem link="/auth">Authenticate</NavigationItem>
-        : <NavigationItem link="/logout">Logout</NavigationItem>}
-        <NavigationItem>PL ENG</NavigationItem>
+        ? <NavigationItem link="/auth">Zaloguj się</NavigationItem>
+        : <NavigationItem link="/logout">Wyloguj</NavigationItem>}
     </ul>
 );
 //do powyższego: jeśli z props, czyli z SideDrawer i Toolbar a tam z Layout, a tam z auth.state przyjdzie informacja
