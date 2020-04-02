@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, {useState, useEffect} from 'react';
 import {connect} from 'react-redux';
 import {Redirect} from 'react-router-dom';
 import Input from '../../components/UI/Input/Input';
@@ -7,10 +7,9 @@ import Spinner from '../../components/UI/Spinner/Spinner';
 import classes from './Auth.module.css';
 import * as actions from '../../store/actions/index'
 
-class Auth extends Component {
+const auth = props => {
 
-    state = {
-        authForm: {
+    const [authForm, setAuthForm] = useState({
             email: {
                 elementType: 'input',
                 elementConfig: {
@@ -39,21 +38,20 @@ class Auth extends Component {
                 valid: false,
                 touched: false
             }
-        },
-        isSignUp: true
-    }
+        });
+    const [isSignUp, setIsSignUp] = useState(true);
 
-    componentDidMount () {
-    //robimy dispatcha dla ustawienia śćieżki przekierowania również gdy user nie zbudował burgera
-    //wykorzystuję do tego parametr building ze state w reducers/burgerBuilder
-        if (!this.props.buildingBurger && this.props.authRedirectPath !== "/") {
-            this.props.onSetAuthRedirectPath();
+    useEffect(() => {
+        //robimy dispatcha dla ustawienia śćieżki przekierowania również gdy user nie zbudował burgera
+        //wykorzystuję do tego parametr building ze state w reducers/burgerBuilder
+        if (!props.buildingBurger && props.authRedirectPath !== "/") {
+            props.onSetAuthRedirectPath();
             //oto co się dzieje: jeśli user nie zbudował burgera I jeśli ścieżka przekierowania nie kieruje na główną,
             //wtedy wywołaj metodę z dispatcha bo tam jest na sztywno '/'. robię tu resetowanie ścieżki na domyślną
         }
-    }
+    }, []);
 
-    checkValidity(value, rules) {
+    const checkValidity = (value, rules) => {
         let isValid = true;
 
         if (!rules) {
@@ -77,42 +75,39 @@ class Auth extends Component {
             isValid = pattern.test(value) && isValid
         }
         return isValid;
-        }
+        };
 
-    inputChangedHandler = (event, inputName) => {
+    const inputChangedHandler = (event, inputName) => {
         const updatedForm = {
-            ...this.state.authForm,
+            ...authForm,
             [inputName]: {
-                ...this.state.authForm[inputName],
+                ...authForm[inputName],
                 value: event.target.value,
-                valid: this.checkValidity(event.target.value, this.state.authForm[inputName].validation),
+                valid: checkValidity(event.target.value, authForm[inputName].validation),
                 touched:true
             }
          };
-         this.setState({authForm: updatedForm});
-    }
+        setAuthForm(updatedForm);
+    };
 
-    submitHandler = (event) => {
+    const submitHandler = (event) => {
         //to zapobiega przeładowywaniu sie strony
         event.preventDefault();
-        this.props.onAuth(this.state.authForm.email.value, this.state.authForm.password.value, this.state.isSignUp);
-    }
+        props.onAuth(authForm.email.value, authForm.password.value, isSignUp);
+    };
 
     //ta metoda zmienia metodę autoryzacji, tzn jeśli jest zarejestrowany to zmienia treść buttona na zaloguj,
     //natomiast gdy nie jest to wtedy wyświetla się zarejestruj - reszta logiki na dole w Button
     //trzeba jeszcze zmienić link do obu Buttonów w zależności od rodzaju autoryzacji - logika i komentarze w action/auth
-    switchAuthModeHandler = () => {
-        this.setState(prevState => {
-            return {isSignUp: !prevState.isSignUp};
-        });
-    }
+    const switchAuthModeHandler = () => {
+        setIsSignUp(!isSignUp);
+    };
 
-    render () {
         const formElementsArray = [];
-        for (let key in this.state.authForm) {
+        for (let key in authForm) {
             formElementsArray.push({
                     id: key,
-                    config: this.state.authForm[key]
+                    config: authForm[key]
                 }
             );
         }
@@ -127,26 +122,26 @@ class Auth extends Component {
                 invalid={!formElement.config.valid}
                 shouldValidate={formElement.config.validation}
                 touched={formElement.config.touched}
-                changed={(event) => this.inputChangedHandler(event, formElement.id)}
+                changed={(event) => inputChangedHandler(event, formElement.id)}
             />
         ));
 
-        if (this.props.loading) {
+        if (props.loading) {
             form = <Spinner/>
         }
 
         let errorMessage = null;
-        if (this.props.error) {
+        if (props.error) {
             errorMessage = (
-                <p>{this.props.error.message}</p>
+                <p>{props.error.message}</p>
             );
         }
 
         let authRedirect = null;
-        if (this.props.isAuthenticated) {
+        if (props.isAuthenticated) {
         //uzależniam ścieżkę od tego, jaka jest aktualnie ustawiona w state w reducerze a to zależy
         //od wartości parametru buildingBurger
-            authRedirect = <Redirect to={this.props.authRedirectPath}/>
+            authRedirect = <Redirect to={props.authRedirectPath}/>
         }
 
         return (
@@ -154,16 +149,15 @@ class Auth extends Component {
             <div className={classes.Auth}>
                 {authRedirect}
                 {errorMessage}
-                <form onSubmit={this.submitHandler}>
+                <form onSubmit={submitHandler}>
                     {form}
                     <Button btnType="Success">ZATWIERDŹ</Button>
                 </form>
                 <Button
-                    clicked={this.switchAuthModeHandler}
-                    btnType='Danger'>PRZEŁĄCZ NA {this.state.isSignUp ? 'LOGOWANIE' : 'REJESTRACJĘ'}</Button>
+                    clicked={switchAuthModeHandler}
+                    btnType='Danger'>PRZEŁĄCZ NA {isSignUp ? 'LOGOWANIE' : 'REJESTRACJĘ'}</Button>
             </div>
         );
-    };
 };
 
 const mapStateToProps = state => {
@@ -185,4 +179,4 @@ const mapDispatchToProps = dispatch => {
     };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(Auth);
+export default connect(mapStateToProps, mapDispatchToProps)(auth);
