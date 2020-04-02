@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import classes from './ContactData.module.css';
 import Button from '../../../components/UI/Button/Button';
@@ -8,9 +8,10 @@ import axios from '../../../axios-orders';
 import withErrorHandler from '../../../hoc/withErrorHandler/withErrorHandler';
 import * as actions from '../../../store/actions/index';
 
-const contactData = props => {
+class ContactData extends Component {
 
-    const [orderForm, setOrderForm] = useState({
+    state = {
+        orderForm: {
             name: {
                 elementType: 'input',
                 elementConfig: {
@@ -91,31 +92,32 @@ const contactData = props => {
                 validation: {},
                 valid: false
             }
-        });
-        const [formIsValid, setFormIsValid] = useState(false);
+        },
+        formIsValid: false
+    };
 
     //event.preventDefault zapobiega przeładowaniu sie strony przy zamówieniu
-    const orderHandler = (event) => {
+    orderHandler = (event) => {
         event.preventDefault();
 
         //tworzymy pusty obiekt, do którego wrzucimy dane uzytkownika
         const formData = {};
-        for (let formElementIdentifier in orderForm) {
+        for (let formElementIdentifier in this.state.orderForm) {
             //rozpoznajemy rodzaj inputa i wrzucamy tam wartość wprowadzona przez usera
             // (TYLKO WARTOŚĆ, config i type nas nie interesują), po czym dodajemy stała formData do stałej order poniżej
-            formData[formElementIdentifier] = orderForm[formElementIdentifier].value;
+            formData[formElementIdentifier] = this.state.orderForm[formElementIdentifier].value;
         }
         const order = {
-            ingredients: props.ingr,
-            price: props.price,
+            ingredients: this.props.ingr,
+            price: this.props.price,
             customerData: formData,
-            userId: props.userId
+            userId: this.props.userId
         };
 
-        props.onOrderBurger(order, props.token);
+        this.props.onOrderBurger(order, this.props.token);
     };
 
-    const checkValidity = (value, rules) => {
+    checkValidity(value, rules) {
         let isValid = true;
         //to jeśli jakieś pole nie ma wymagalności, np deliveryMethod, wtedy mówi, że jest poprawnie
         if (!rules) {
@@ -141,16 +143,16 @@ const contactData = props => {
             isValid = pattern.test(value) && isValid
         }
         return isValid;
-    };
+    }
 
     //inputIdentifier to parametr po którym metoda rozpozna o który input chodzi. PONIŻEJ do metody przesyłamy formElement.id, co
     //jest unikalną nazwą tego inputa (pętla w render()).
-    const inputChangedHandler = (event, inputIdentifier) => {
+    inputChangedHandler = (event, inputIdentifier) => {
         // console.log(event.target.value);
 
         //robimy klon obiektu orderForm (za pomocą ...)
         const updatedOrderForm = {
-            ...orderForm
+            ...this.state.orderForm
         };
         //tworzymy stałą pomocniczą, żeby zidentyfikować konkretny input w obiekcie orderForm (za pomocą inputIndentifier)
         const updatedFormElement = {
@@ -162,7 +164,7 @@ const contactData = props => {
         updatedFormElement.value = event.target.value;
 
         //tutaj ustawiamy walidację, czy pola zostały poprawnie wypełnione - sprawdzi to metoda checkvalidity
-        updatedFormElement.valid = checkValidity(updatedFormElement.value, updatedFormElement.validation);
+        updatedFormElement.valid = this.checkValidity(updatedFormElement.value, updatedFormElement.validation);
         console.log(updatedFormElement);
 
         //ustawiamy ten parametr gdy użytkownik kliknie na pole i wtedy dopiero pokazuje walidację poprzez podświetlenie
@@ -180,20 +182,20 @@ const contactData = props => {
         }
 
         //ustawiamy state na nowo, z danymi podanymi w formularzu przez użutkownika, oraz info że cały formularz jest ok
-        setOrderForm(updatedOrderForm);
-        setFormIsValid(formIsValid);
+        this.setState({orderForm: updatedOrderForm, formIsValid: formIsValid});
     };
 
+    render() {
         const formElementsArray = [];
-        for (let key in orderForm) {
+        for (let key in this.state.orderForm) {
             formElementsArray.push({
                     id: key,
-                    config: orderForm[key]
+                    config: this.state.orderForm[key]
                 }
             );
         }
         let form = (
-            <form onSubmit={orderHandler}>
+            <form onSubmit={this.orderHandler}>
                 {formElementsArray.map(formElement => (
                     <Input
                         key={formElement.id}
@@ -203,12 +205,12 @@ const contactData = props => {
                         invalid={!formElement.config.valid}
                         shouldValidate={formElement.config.validation}
                         touched={formElement.config.touched}
-                        changed={(event) => inputChangedHandler(event, formElement.id)}/>
+                        changed={(event) => this.inputChangedHandler(event, formElement.id)}/>
                 ))}
-                <Button btnType="Success" disabled={!formIsValid}>ORDER</Button>
+                <Button btnType="Success" disabled={!this.state.formIsValid}>ORDER</Button>
             </form>
         );
-        if (props.loading) {
+        if (this.props.loading) {
             form = <Spinner/>
         }
         return (
@@ -217,7 +219,8 @@ const contactData = props => {
                 {form}
             </div>
         );
-};
+    }
+}
 
 const mapStateToProps = state => {
     return {
@@ -235,4 +238,4 @@ const mapDispatchToProps = dispatch => {
     }
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(withErrorHandler(contactData, axios));
+export default connect(mapStateToProps, mapDispatchToProps)(withErrorHandler(ContactData, axios));

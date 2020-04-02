@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import Aux from '../../hoc/AuxComponent/AuxComponent';
 import Burger from '../../components/Burger/Burger'
@@ -10,15 +10,17 @@ import withErrorHandler from '../../hoc/withErrorHandler/withErrorHandler';
 import * as actions from '../../store/actions/index';
 import axios from '../../axios-orders';
 
-const burgerBuilder = props => {
+export class BurgerBuilder extends Component {
 
-    const [purchasing, setPurchasing] = useState(false);
+    state = {
+        purchasing: false
+    };
 
-    useEffect(() => {
-        props.onInitIngredients();
-    }, []);
+    componentDidMount() {
+        this.props.onInitIngredients();
+    }
 
-    const updatePurchaseState = (ingredients) => {
+    updatePurchaseState(ingredients) {
         const sum = Object.keys(ingredients)
             .map(igKeys => {
                 return ingredients[igKeys];
@@ -29,39 +31,40 @@ const burgerBuilder = props => {
         //zamiast ustawiać state (dzieki redux nie musimy już tego robić) zwracamy sumę składników - jeśli coś zostanie
         //dodane do burgera wtedy będzie mozna złożyć zamówienie. Teraz metoda przyjmuje składniki a zwraca booleana
         return sum > 0;
-    };
+    }
 
-    const purchaseHandler = () => {
-        if (props.isAuthenticated) {
-            setPurchasing(true);
+    purchaseHandler = () => {
+        if (this.props.isAuthenticated) {
+            this.setState({purchasing: true});
         } else {
         //przekierowanie do checkout gdy zaloguje się po uprzednim stworzeniu burgera
-            props.onSetAuthRedirectPath("/checkout");
-            props.history.push("/auth");
+            this.props.onSetAuthRedirectPath("/checkout");
+            this.props.history.push("/auth");
         }
     };
 
-    const purchaseCancelHandler = () => {
-        setPurchasing(false);
+    purchaseCancelHandler = () => {
+        this.setState({purchasing: false});
     };
 
-    const purchaseContinueHandler = () => {
-        //initPurchase dajemy tutaj a nie w checkoucie ponieważ wtedy nie dało by się złożyć ponownego zamówienia a
-        //przekierowywało by z powrotem po dodaniu składników
-        props.onInitPuchase();
-        props.history.push("/checkout");
+    purchaseContinueHandler = () => {
+//initPurchase dajemy tutaj a nie w checkoucie ponieważ wtedy nie dało by się złożyć ponownego zamówienia a
+//przekierowywało by z powrotem po dodaniu składników
+        this.props.onInitPuchase();
+        this.props.history.push("/checkout");
     };
 
+    render() {
         const disabledInfo = {
             //zmieniamy state.ingredients na props.ingr ponieważ ZMAPOWALIŚMY STATE NA PROPS w metodzie na dole strony
-            ...props.ingr
+            ...this.props.ingr
         };
         for (let key in disabledInfo) {
             disabledInfo[key] = disabledInfo[key] <= 0
         }
 
         const maxQuantityInfo = {
-            ...props.ingr
+            ...this.props.ingr
         };
 
         for (let key in maxQuantityInfo) {
@@ -69,41 +72,42 @@ const burgerBuilder = props => {
         }
 
         let orderSummary = null;
-        let burger = props.error ? <p>Ingredients can not be loaded </p> : <Spinner/>;
-        if (props.ingr) {
+        let burger = this.props.error ? <p>Ingredients can not be loaded </p> : <Spinner/>;
+        if (this.props.ingr) {
             burger = (
                 <Aux>
                     {/*tu będzie wizualizacja Burgera*/}
-                    <Burger ingredients={props.ingr}/>
+                    <Burger ingredients={this.props.ingr}/>
                     {/*//tu będzie panel zarządzający usuwaniem i dodawaniem skłądników*/
                     }
                     <BuildControls
-                        addedIngredients={props.onIngredientAdded}
-                        removedIngredients={props.onIngredientRemoved}
+                        addedIngredients={this.props.onIngredientAdded}
+                        removedIngredients={this.props.onIngredientRemoved}
                         disabled={disabledInfo}
                         maxQuantity={maxQuantityInfo}
-                        purchaseble={updatePurchaseState(props.ingr)}
-                        isAuth={props.isAuthenticated}
-                        ordered={purchaseHandler}
-                        price={props.price}/>
+                        purchaseble={this.updatePurchaseState(this.props.ingr)}
+                        isAuth={this.props.isAuthenticated}
+                        ordered={this.purchaseHandler}
+                        price={this.props.price}/>
                 </Aux>
             );
             orderSummary = <OrderSummary
-                ingredients={props.ingr}
-                price={props.price}
-                purchaseCancelled={purchaseCancelHandler}
-                purchaseContinued={purchaseContinueHandler}/>;
+                ingredients={this.props.ingr}
+                price={this.props.price}
+                purchaseCancelled={this.purchaseCancelHandler}
+                purchaseContinued={this.purchaseContinueHandler}/>;
         }
 
         return (
             <Aux>
-                <Modal show={purchasing} modalClosed={purchaseCancelHandler}>
+                <Modal show={this.state.purchasing} modalClosed={this.purchaseCancelHandler}>
                     {orderSummary}
                 </Modal>
                 {burger}
             </Aux>
         );
-};
+    }
+}
 
 const mapStateToProps = state => {
     return {
@@ -124,7 +128,6 @@ const madDispatchToProps = dispatch => {
         onInitPuchase: () => dispatch(actions.purchaseInit()),
         onSetAuthRedirectPath: (path) => dispatch(actions.setAuthRedirectPath(path))
     }
-};
-
+}
 //modyfikujemy export tak, żeby dodać connect potrzebny do obsługi reduxa
-export default connect(mapStateToProps, madDispatchToProps)(withErrorHandler(burgerBuilder, axios));
+export default connect(mapStateToProps, madDispatchToProps)(withErrorHandler(BurgerBuilder, axios));

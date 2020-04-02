@@ -1,45 +1,53 @@
-import React, {useState} from 'react';
+import React, {Component} from 'react';
 import Aux from '../AuxComponent/AuxComponent';
 import classes from './Layout.module.css';
 import Toolbar from '../../components/Navigation/Toolbar/Toolbar';
 import SideDrawer from '../../components/Navigation/SideDrawer/SideDrawer';
 import {connect} from 'react-redux';
 
-const layout = props => {
+class Layout extends Component {
 
-    const [visibleSideDrawer, setVisibleSideDrawer] = useState(false);
-
-    const sideDrawerClosedHandler = () => {
-        setVisibleSideDrawer(false);
+    state = {
+        showSideDrawer: false
     };
 
-    const sideDrawerToggleHandler = () => {
-        setVisibleSideDrawer(!visibleSideDrawer);
-        };
+    sideDrawerClosedHandler = () => {
+        this.setState({showSideDrawer: false});
+    };
 
-    return (
+    sideDrawerToggleHandler = () => {
+        this.setState((prevState) => {
+            return {showSideDrawer: !prevState.showSideDrawer}
+        });
+        //W taki sposób (poprzez this.state) lepiej tego nie robić, lepszy spopsób powyżej.
+        // this.setState({showSideDrawer: !this.state.showSideDrawer});
+    };
+
+    render() {
+        return (
             <Aux>
                 {/*Jesli w {} jest this.jakaśMetoda to gdyby była z nawiasami na końcu była by wykonywana (executed) ale */}
                 {/*zawsze należy używać REFERENCJI do metody w klasie*/}
                 <Toolbar
-                    isAuth={props.isAuthenticated}
-                    drawerToggleClicked={sideDrawerToggleHandler}/>
+                    isAuth={this.props.isAuthenticated}
+                    drawerToggleClicked={this.sideDrawerToggleHandler}/>
                 <SideDrawer
-                    isAuth={props.isAuthenticated}
-                    open={visibleSideDrawer}
-                    closed={sideDrawerClosedHandler}/>
+                    isAuth={this.props.isAuthenticated}
+                    open={this.state.showSideDrawer}
+                    closed={this.sideDrawerClosedHandler}/>
                 <main className={classes.Content}>
-                    {props.children}
+                    {this.props.children}
                 </main>
             </Aux>
         )
+    }
 }
 
 const mapStateToProps = state => {
     return {
-        //jeśli token jest w state wtedy wiadomo, że user jest zalogowany czyli ma autoryzację
+    //jeśli token jest w state wtedy wiadomo, że user jest zalogowany czyli ma autoryzację
         isAuthenticated: state.auth.token !== null
     };
 };
 
-export default connect(mapStateToProps)(layout);
+export default connect(mapStateToProps)(Layout);
