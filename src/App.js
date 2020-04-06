@@ -21,9 +21,13 @@ const Auth = React.lazy(() => {
 
 const app = props => {
 
+    //takie wyrażenie pozwoli na uzależnienie wykonania (ponownego zrenderowania komponentu) useEffect od props
+    //ale jednocześnie zapobiegnie uruchamianiu się useEffect za każdym razem, gdy props się zmieni, a zamiast tego
+    //wtedy gdy zmieni się tylko funkcja ontryautosignup. To samo robię w Auth, Logout, BurgerBuilder i Orders
+    const {onTryAutoSignup} = props;
     useEffect(() => {
-        props.onTryAutoSignup();
-    }, []);
+        onTryAutoSignup();
+    }, [onTryAutoSignup]);
 
 //JAKO DODATKOWE ULEPSZENIE MOŻNA DODAĆ JESZCZE LENIWE ŁADOWANIE IMPORTÓW POPRZEZ ASYNCCOMPONENT - PRZYKŁAD W REACT-START-APP
     let routes = (

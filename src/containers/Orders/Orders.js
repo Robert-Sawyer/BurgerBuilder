@@ -8,10 +8,11 @@ import * as actions from '../../store/actions/index';
 
 const orders = props => {
 
+    const {onFetchOrders} = props;
     //pobieramy zamówienia z bazy firebase poprzez axiosa któy jest teraz w actionCreater w action/order
     useEffect(() => {
-        props.onFetchOrders(props.token, props.userId);
-    }, []);
+        onFetchOrders(props.token, props.userId);
+    }, [onFetchOrders]);
 
     //gdy zamówienia się ładują wtedy wyświetl na chwilę Spinnera, a gdy się już załadują, wtedy wyświetl listę
     //zamówień (.map tworzy nową listę z propsa, który idzie z mapStateToProps i który przychodzi z reducera, który

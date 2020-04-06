@@ -41,15 +41,16 @@ const auth = props => {
         });
     const [isSignUp, setIsSignUp] = useState(true);
 
+    const {buildingBurger, authRedirectPath, onSetAuthRedirectPath} = props;
     useEffect(() => {
         //robimy dispatcha dla ustawienia śćieżki przekierowania również gdy user nie zbudował burgera
         //wykorzystuję do tego parametr building ze state w reducers/burgerBuilder
-        if (!props.buildingBurger && props.authRedirectPath !== "/") {
-            props.onSetAuthRedirectPath();
+        if (!buildingBurger && authRedirectPath !== "/") {
+            onSetAuthRedirectPath();
             //oto co się dzieje: jeśli user nie zbudował burgera I jeśli ścieżka przekierowania nie kieruje na główną,
             //wtedy wywołaj metodę z dispatcha bo tam jest na sztywno '/'. robię tu resetowanie ścieżki na domyślną
         }
-    }, []);
+    }, [buildingBurger, authRedirectPath, onSetAuthRedirectPath]);
 
     const checkValidity = (value, rules) => {
         let isValid = true;

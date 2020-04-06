@@ -5,12 +5,13 @@ import * as actions from '../../../store/actions/index'
 
 const logout = props => {
 
+    const {onLogout} = props;
     useEffect(() => {
         //żeby dodać przekierowanie po wylogowaniu są takie sposoby:
         //1 - dodać jako argument onLogout(this.props.history.push("/");
         //2 - poprzez Redirect - dodać tag w return i dodać Route w App.js
-        props.onLogout();
-    }, []);
+        onLogout();
+    }, [onLogout]);
 
         return <Redirect to="/"/>;
 };
