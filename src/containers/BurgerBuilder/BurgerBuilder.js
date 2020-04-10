@@ -1,5 +1,5 @@
-import React, {useState, useEffect} from 'react';
-import {connect} from 'react-redux';
+import React, {useState, useEffect, useCallback} from 'react';
+import {connect, useSelector, useDispatch} from 'react-redux';
 import Aux from '../../hoc/AuxComponent/AuxComponent';
 import Burger from '../../components/Burger/Burger'
 import BuildControls from '../../components/Burger/BuildControls/BuildControls';
@@ -14,7 +14,31 @@ const burgerBuilder = props => {
 
     const [purchasing, setPurchasing] = useState(false);
 
-    const {onInitIngredients} = props;
+    //używam useSelectorów żeby zastąpić mapStatetoProps i usunąć propsy - zamiast jednej metody tworzę cztery stałe
+    // zwracające te same wartości
+    const ingr = useSelector(state => {
+        return state.burgerBuilder.ingredients;
+    });
+    const price = useSelector(state => {
+        return state.burgerBuilder.totalPrice;
+    });
+    const error = useSelector(state => {
+        return state.burgerBuilder.error;
+    });
+    const isAuthenticated = useSelector(state => {
+        return state.auth.token !== null;
+    });
+
+    //dzięki usedispatch mogę usunąć metodę useDispatchToProps i stworzyć stałą dla każdej akcji i mogę pozbyć się
+    //props przed odniesieniem do elemntów state albo do metod dispatcha
+    const dispatch = useDispatch();
+    const onIngredientAdded = (ingrName) => dispatch(actions.addIngredient(ingrName));
+    const onIngredientRemoved = (ingrName) => dispatch(actions.removeIngredient(ingrName));
+    const onInitIngredients = useCallback(() => dispatch(actions.initIngredients()), [dispatch]);
+    const onInitPuchase = () => dispatch(actions.purchaseInit());
+    const onSetAuthRedirectPath = (path) => dispatch(actions.setAuthRedirectPath(path));
+
+    // const {onInitIngredients} = props;
     useEffect(() => {
         onInitIngredients();
     }, [onInitIngredients]);
@@ -33,11 +57,11 @@ const burgerBuilder = props => {
     };
 
     const purchaseHandler = () => {
-        if (props.isAuthenticated) {
+        if (isAuthenticated) {
             setPurchasing(true);
         } else {
         //przekierowanie do checkout gdy zaloguje się po uprzednim stworzeniu burgera
-            props.onSetAuthRedirectPath("/checkout");
+            onSetAuthRedirectPath("/checkout");
             props.history.push("/auth");
         }
     };
@@ -49,20 +73,20 @@ const burgerBuilder = props => {
     const purchaseContinueHandler = () => {
         //initPurchase dajemy tutaj a nie w checkoucie ponieważ wtedy nie dało by się złożyć ponownego zamówienia a
         //przekierowywało by z powrotem po dodaniu składników
-        props.onInitPuchase();
+        onInitPuchase();
         props.history.push("/checkout");
     };
 
         const disabledInfo = {
             //zmieniamy state.ingredients na props.ingr ponieważ ZMAPOWALIŚMY STATE NA PROPS w metodzie na dole strony
-            ...props.ingr
+            ...ingr
         };
         for (let key in disabledInfo) {
             disabledInfo[key] = disabledInfo[key] <= 0
         }
 
         const maxQuantityInfo = {
-            ...props.ingr
+            ...ingr
         };
 
         for (let key in maxQuantityInfo) {
@@ -70,28 +94,28 @@ const burgerBuilder = props => {
         }
 
         let orderSummary = null;
-        let burger = props.error ? <p>Ingredients can not be loaded </p> : <Spinner/>;
-        if (props.ingr) {
+        let burger = error ? <p>Ingredients can not be loaded </p> : <Spinner/>;
+        if (ingr) {
             burger = (
                 <Aux>
                     {/*tu będzie wizualizacja Burgera*/}
-                    <Burger ingredients={props.ingr}/>
+                    <Burger ingredients={ingr}/>
                     {/*//tu będzie panel zarządzający usuwaniem i dodawaniem skłądników*/
                     }
                     <BuildControls
-                        addedIngredients={props.onIngredientAdded}
-                        removedIngredients={props.onIngredientRemoved}
+                        addedIngredients={onIngredientAdded}
+                        removedIngredients={onIngredientRemoved}
                         disabled={disabledInfo}
                         maxQuantity={maxQuantityInfo}
-                        purchaseble={updatePurchaseState(props.ingr)}
-                        isAuth={props.isAuthenticated}
+                        purchaseble={updatePurchaseState(ingr)}
+                        isAuth={isAuthenticated}
                         ordered={purchaseHandler}
-                        price={props.price}/>
+                        price={price}/>
                 </Aux>
             );
             orderSummary = <OrderSummary
-                ingredients={props.ingr}
-                price={props.price}
+                ingredients={ingr}
+                price={price}
                 purchaseCancelled={purchaseCancelHandler}
                 purchaseContinued={purchaseContinueHandler}/>;
         }
@@ -106,26 +130,26 @@ const burgerBuilder = props => {
         );
 };
 
-const mapStateToProps = state => {
-    return {
-        ingr: state.burgerBuilder.ingredients,
-        price: state.burgerBuilder.totalPrice,
-        error: state.burgerBuilder.error,
-        isAuthenticated: state.auth.token !== null
-    };
-};
-
-const madDispatchToProps = dispatch => {
-    return {
-        //ingrName dostajemy przy wywołaniu tej funkcji i ustawiamy jako wartość ingredientName, któe jest potrzebne
-        //w reducerze - action.ingredientName
-        onIngredientAdded: (ingrName) => dispatch(actions.addIngredient(ingrName)),
-        onIngredientRemoved: (ingrName) => dispatch(actions.removeIngredient(ingrName)),
-        onInitIngredients: () => dispatch(actions.initIngredients()),
-        onInitPuchase: () => dispatch(actions.purchaseInit()),
-        onSetAuthRedirectPath: (path) => dispatch(actions.setAuthRedirectPath(path))
-    }
-};
+// const mapStateToProps = state => {
+//     return {
+//         ingr: state.burgerBuilder.ingredients,
+//         price: state.burgerBuilder.totalPrice,
+//         error: state.burgerBuilder.error,
+//         isAuthenticated: state.auth.token !== null
+//     };
+// };
+//
+// const madDispatchToProps = dispatch => {
+//     return {
+//         //ingrName dostajemy przy wywołaniu tej funkcji i ustawiamy jako wartość ingredientName, któe jest potrzebne
+//         //w reducerze - action.ingredientName
+//         onIngredientAdded: (ingrName) => dispatch(actions.addIngredient(ingrName)),
+//         onIngredientRemoved: (ingrName) => dispatch(actions.removeIngredient(ingrName)),
+//         onInitIngredients: () => dispatch(actions.initIngredients()),
+//         onInitPuchase: () => dispatch(actions.purchaseInit()),
+//         onSetAuthRedirectPath: (path) => dispatch(actions.setAuthRedirectPath(path))
+//     }
+// };
 
 //modyfikujemy export tak, żeby dodać connect potrzebny do obsługi reduxa
-export default connect(mapStateToProps, madDispatchToProps)(withErrorHandler(burgerBuilder, axios));
+export default withErrorHandler(burgerBuilder, axios);
