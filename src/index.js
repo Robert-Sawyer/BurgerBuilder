@@ -4,12 +4,14 @@ import {BrowserRouter} from 'react-router-dom';
 import {Provider} from 'react-redux';
 import {createStore, applyMiddleware, compose, combineReducers} from 'redux';
 import thunk from 'redux-thunk';
+import createSagaMiddleware from 'redux-saga';
 import './index.css';
 import App from './App';
 import registerServiceWorker from './registerServiceWorker';
 import burgerBuilderReducer from './store/reducers/burgerBuilder';
 import orderReducer from './store/reducers/order';
 import authReducer from './store/reducers/auth';
+import {watchAuth} from './store/sagas/index';
 
 //dzięki process.env ... ustawiam, że po deployu eplikacji tylkoja będe widział podgląd reduxa w narzędziach developwerskich
 //NODE_ENV znalazłem w folderze config w pliku env,js gdzie znajdują się zmienne środowiskowe
@@ -21,7 +23,11 @@ const rootReducer = combineReducers({
     auth: authReducer
 });
 
-const store = createStore(rootReducer, composeEnhancers(applyMiddleware(thunk)));
+const sagaMiddleware = createSagaMiddleware();
+
+const store = createStore(rootReducer, composeEnhancers(applyMiddleware(thunk, sagaMiddleware)));
+
+sagaMiddleware.run(watchAuth);
 
 const app = (
     <Provider store={store}>
