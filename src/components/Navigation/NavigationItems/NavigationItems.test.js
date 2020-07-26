@@ -22,14 +22,14 @@ describe('<NavigationItems/>', () => {
     //w metodzie beforeEach ustawiam renderowanie NavigationItems i dzieki temu w it() mam już ustawione co trzeba
         //oczekiwane rezultaty - chcę, żeby we wrapperze, do którego wpadł wyrenderowany NavigationItems
         //znalazły się 2 elementy mniejsze, czyli NavigationItem, bo tak powinno się stać, gdy user nie jest zalogoany
-        expect(wrapper.find(NavigationItem)).tohaveLength(2);
+        expect(wrapper.find(NavigationItem)).toHaveLength(2);
     });
 
      it('should render three <NavigationItem/> elements if authenticated', () => {
      //żeby dodać isAuthenticated do wrappera, żeby spełnić warunki testu mam dwa sposoby do tego:
 //        const wrapper = shallow(<NavigationItems isAuthenticated/>);
         wrapper.setProps({isAuthenticated: true});
-        expect(wrapper.find(NavigationItem)).tohaveLength(3);
+        expect(wrapper.find(NavigationItem)).toHaveLength(3);
     });
 
     it('should render specific <NavigationItem/> element if authenticated', () => {
