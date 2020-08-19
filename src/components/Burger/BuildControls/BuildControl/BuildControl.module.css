@@ -1,7 +1,13 @@
 .BuildControl {
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
   margin: 5px 0;
 }
 
@@ -17,26 +23,25 @@
 }
 
 .BuildControl button:disabled {
-  background-color: orderButtonColor;
+  background-color: #AC9980;
   border: 1px solid #7E7365;
   color: #ccc;
   cursor: default;
 }
 
 .BuildControl button:hover:disabled {
-  background-color: orderButtonColor;
+  background-color: #AC9980;
   color: #ccc;
   cursor: not-allowed;
 }
 
-.Label {
-  padding: 10px;
-  font-weight: bold;
-  width: 80px;
-}
-
 .BuildControl .Less {
   background-color: #D39952;
+  color: white;
+}
+
+.BuildControl .Less:active, .BuildControl .Less :hover {
+  background-color: #DAA972;
   color: white;
 }
 
@@ -45,12 +50,14 @@
   color: white;
 }
 
-.BuildControl .Less:hover, .BuildControl .Less:active {
-  background-color: #DAA972;
-  color: white;
-}
-
-.BuildControl .More:hover, .BuildControl .More:active {
+.BuildControl .More:active, .BuildControl .More :hover {
   background-color: #99703F;
   color: white;
 }
+
+.Label {
+  padding: 10px;
+  font-weight: bold;
+  width: 80px;
+}
+/*# sourceMappingURL=BuildControl.module.css.map */
