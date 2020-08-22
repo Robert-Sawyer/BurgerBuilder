@@ -28,7 +28,7 @@
             cursor: default;   
         }
 
-        &:hover:disabled {
+        &:hover, :disabled {
             background-color: $buildControlBackgroundColor;
             color: $buildControlColor;
             cursor: not-allowed;
