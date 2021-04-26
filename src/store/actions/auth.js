@@ -61,7 +61,7 @@ export const auth = (email, password, isSignUp) => {
 //w zakłądkach sign up with email/password i sign in with email/password
         if (!isSignUp) {
             url = 'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyA845c_lw6EqLeX0fOvQ2R-0HjRGe4Lx4E';
-        };
+        }
 
         axios.post(url, authData)
             .then(response => {

@@ -15,24 +15,24 @@ const layout = props => {
 
     const sideDrawerToggleHandler = () => {
         setVisibleSideDrawer(!visibleSideDrawer);
-        };
+    };
 
     return (
-            <Aux>
-                {/*Jesli w {} jest this.jakaśMetoda to gdyby była z nawiasami na końcu była by wykonywana (executed) ale */}
-                {/*zawsze należy używać REFERENCJI do metody w klasie*/}
-                <Toolbar
-                    isAuth={props.isAuthenticated}
-                    drawerToggleClicked={sideDrawerToggleHandler}/>
-                <SideDrawer
-                    isAuth={props.isAuthenticated}
-                    open={visibleSideDrawer}
-                    closed={sideDrawerClosedHandler}/>
-                <main className={classes.Content}>
-                    {props.children}
-                </main>
-            </Aux>
-        )
+        <Aux>
+            {/*Jesli w {} jest this.jakaśMetoda to gdyby była z nawiasami na końcu była by wykonywana (executed) ale */}
+            {/*zawsze należy używać REFERENCJI do metody w klasie*/}
+            <Toolbar
+                isAuth={props.isAuthenticated}
+                drawerToggleClicked={sideDrawerToggleHandler}/>
+            <SideDrawer
+                isAuth={props.isAuthenticated}
+                open={visibleSideDrawer}
+                closed={sideDrawerClosedHandler}/>
+            <main className={classes.Content}>
+                {props.children}
+            </main>
+        </Aux>
+    )
 }
 
 const mapStateToProps = state => {

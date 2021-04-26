@@ -31,7 +31,7 @@ const checkout = props => {
                     checkoutContinued={checkoutContinuedHandler}/>
                 <Route
                     path={props.match.path + '/contact-data'}
-                    //dzięki redux możemy zastąpić render property tą poniżej i teraz nie potrzebujemy mapować ceny price
+                    //dzięki redux mogę zastąpić render property tą poniżej i teraz nie potrzebuje mapować ceny price
                     component={ContactData}/>
             </div>
         );
